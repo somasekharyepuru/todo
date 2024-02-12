@@ -1,5 +1,4 @@
 import { IForm, IFormDependentConfig, IFormField } from './form-interface';
-import { AmenityTemplate } from '@/api';
 
 export const getVariablesFromConfig = ({
   variables,
@@ -48,7 +47,7 @@ export const getFormItemWidth = (gridSpacing: number | undefined): string => {
 
 export const isDependentRulesSatisfied = (
   fieldConfig: IFormField,
-  data: any,
+  data: any
 ) => {
   const { dependentConfig } = fieldConfig;
   if (!dependentConfig?.length) {
@@ -79,7 +78,7 @@ export const isDependentRulesSatisfied = (
 
 export const getDependentChangedValueFields = (
   dependencyConfig: IFormDependentConfig[],
-  changedValues: any,
+  changedValues: any
 ) => {
   const dependentChangedFields: string[] = [];
   dependencyConfig.forEach((dependency: IFormDependentConfig) => {
