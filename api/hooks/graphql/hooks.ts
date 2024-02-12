@@ -268,6 +268,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'JWTTokenWithUser', id: string, token: string, first_name: string, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, expires_at: number, role: { __typename?: 'Role', id: string, name: string, code: string, description?: string | null } } };
 
+export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProjectsQuery = { __typename?: 'Query', getProjects: Array<{ __typename?: 'Project', id: string, name: string }> };
+
 
 export const LoginDocument = `
     mutation Login($user: LoginDto!) {
@@ -293,15 +298,26 @@ export const LoginDocument = `
   }
 }
     `;
+export const GetProjectsDocument = `
+    query GetProjects {
+  getProjects {
+    id
+    name
+  }
+}
+    `;
 
 const injectedRtkApi = graphql_api.injectEndpoints({
   endpoints: (build) => ({
     Login: build.mutation<LoginMutation, LoginMutationVariables>({
       query: (variables) => ({ document: LoginDocument, variables })
     }),
+    GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
+      query: (variables) => ({ document: GetProjectsDocument, variables })
+    }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useLoginMutation } = injectedRtkApi;
+export const { useLoginMutation, useGetProjectsQuery, useLazyGetProjectsQuery } = injectedRtkApi;
 

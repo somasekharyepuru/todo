@@ -20,7 +20,7 @@ export const useLogin = () => {
     })
       .unwrap()
       .then((value) => {
-        const { id, token } = value.login;
+        const { id, token, first_name, last_name, email } = value.login;
         const decoded = decodeJwt(token);
         let expiryTime = decoded?.exp
           ? decoded?.exp
@@ -31,6 +31,11 @@ export const useLogin = () => {
             token: token,
             expiry: expiryTime,
             remember: !!remember,
+            user: {
+              id,
+              name: [first_name, last_name].join(' '),
+              email,
+            },
           })
         );
       })

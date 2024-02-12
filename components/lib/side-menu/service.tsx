@@ -1,5 +1,5 @@
-import { MSLink } from "../base";
-import { ISideMenuItem } from "./side-menu-interface";
+import { MSLink } from '../base';
+import { ISideMenuItem } from './side-menu-interface';
 export const getFormattedItems = (items: ISideMenuItem[]) =>
   items.map(getFormattedItem);
 
@@ -7,18 +7,18 @@ export const getFormattedItem = (item: ISideMenuItem) => {
   const updatedItem = { ...item };
   updatedItem.label = item?.children ? (
     <div className={`capitalize ${item.className}`}>
-      <span className={item.labelClassName || ""}>{item.label}</span>
+      <span className={item.labelClassName || ''}>{item.label}</span>
     </div>
   ) : (
     <div>
       {item.disabled ? (
-        <span className={item.labelClassName || ""}>{item.label}</span>
+        <span className={item.labelClassName || ''}>{item.label}</span>
       ) : (
         <MSLink
-          href={item.url || "/"}
+          href={item.url || '/'}
           className={`capitalize ${item.className}`}
         >
-          <span className={item.labelClassName || ""}>{item.label}</span>
+          <span className={item.labelClassName || ''}>{item.label}</span>
         </MSLink>
       )}
     </div>
@@ -31,11 +31,11 @@ export const getFormattedItem = (item: ISideMenuItem) => {
 };
 
 export const getSelectedKey = (items: any[], path: string): any => {
-  if (path === "/") {
-    return "dashboard";
+  if (path === '/') {
+    return 'dashboard';
   }
   for (let i = 0; i < items.length; i++) {
-    if (items[i].url === "/") {
+    if (items[i].url === '/') {
       continue;
     }
     if (items[i].children) {
@@ -56,7 +56,7 @@ export const getSelectedKey = (items: any[], path: string): any => {
 export const getParentMenu = (
   items: any[],
   selectedKey: string,
-  parentKey = "",
+  parentKey = '',
   parentArray: string[] = []
 ): string[] | undefined => {
   for (let i = 0; i < items.length; i++) {
@@ -67,5 +67,6 @@ export const getParentMenu = (
       parentArray.push(parentKey);
     }
   }
+  parentArray.push('projects');
   return parentArray;
 };

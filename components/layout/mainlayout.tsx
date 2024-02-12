@@ -4,44 +4,45 @@ import {
   MSSpinner,
   MSSideMenu,
 } from '@/components';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Header } from './header';
+import { Layout } from 'antd';
+import { LayoutItems } from './layout-items';
+import { useGetProjectsQuery } from '@/api';
 interface mainLayoutProps {
   children?: React.ReactNode;
   app?: string;
 }
 export const MainLayout = ({ children }: mainLayoutProps) => {
-  const [menuLoading, setMenuLoading] = useState(true);
   const { isCollapsed, selected } = useSelector(
     (state: any) => state.sideMenu as ISideMenuSliceState
   );
-  const handleLoader = () => setMenuLoading(false);
+  const { data: projects, isFetching } = useGetProjectsQuery();
+  const layoutItems = useMemo(() => {
+    const items = LayoutItems.slice();
+    if (projects?.getProjects.length) {
+      items.push({
+        key: 'projects',
+        label: 'Projects',
+        children: projects.getProjects.map((project) => ({
+          key: project.id,
+          label: project.name,
+          url: `projects/${project.id}`,
+        })),
+      });
+    }
+    return items;
+  }, [projects]);
 
   return (
-    <>
-      <Header />
-      <MSContent className="main-layout-wrapper hasSider">
-        <MSSideMenu handleLoader={handleLoader} items={[]} />
-        <MSContent
-          className={`${
-            !isCollapsed
-              ? 'ml-[285px]'
-              : 'ml-[100px] transition-all duration-200 ease-linear'
-          } main-content-wrapper mt-[5.5rem]  mb-[1rem] mr-[1.1rem]  md:mr-[1.1rem] lg:mr-[3rem]`}
-        >
-          <MSContent>
-            {menuLoading ? (
-              <MSSpinner
-                className="spin-wrapper h-[calc(100vh-200px)] w-full flex items-center justify-center"
-                size="large"
-              />
-            ) : (
-              <> {children}</>
-            )}
-          </MSContent>
+    <Layout style={{ minHeight: '100vh' }}>
+      <MSSideMenu items={layoutItems} />
+      <Layout>
+        <MSContent>
+          <MSContent>{children}</MSContent>
         </MSContent>
-      </MSContent>
-    </>
+      </Layout>
+    </Layout>
   );
 };

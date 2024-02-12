@@ -4,6 +4,7 @@ export interface SessionState {
   expiry: number;
   remember: boolean;
   initRefresh?: boolean;
+  user?: { id: string; name: string; email: string };
 }
 
 const initialState: SessionState = {
@@ -11,6 +12,7 @@ const initialState: SessionState = {
   expiry: 0,
   remember: false,
   initRefresh: false,
+  user: { id: '', name: '', email: '' },
 };
 
 export const session = createSlice({
