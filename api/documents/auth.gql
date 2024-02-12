@@ -1,0 +1,22 @@
+mutation Login($user: LoginDto!) {
+  login(user: $user) {
+    id
+    token
+    first_name
+    last_name
+    email
+    phone
+    is_active
+    is_verified
+    is_profile_updated
+    role {
+      id
+      name
+      code
+      description
+    }
+    created_at
+    updated_at
+    expires_at
+  }
+}
