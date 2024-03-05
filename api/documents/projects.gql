@@ -4,3 +4,21 @@ query GetProjects {
     name
   }
 }
+mutation CreateProject($project: CreateProjectDto!) {
+  createProject(project: $project) {
+    id
+    name
+  }
+}
+mutation UpdateProject($project: UpdateProjectDto!) {
+  updateProject(project: $project) {
+    id
+    name
+  }
+}
+mutation DeleteProject($deleteProjectId: String!) {
+  deleteProject(id: $deleteProjectId) {
+    success
+    message
+  }
+}

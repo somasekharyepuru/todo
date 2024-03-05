@@ -46,7 +46,7 @@ export const getSelectedKey = (items: any[], path: string): any => {
         return childKey;
       }
     }
-    if (path.indexOf(items[i]?.url) !== -1) {
+    if (path?.indexOf(items[i]?.url) !== -1) {
       return items[i].key;
     }
   }
@@ -67,6 +67,5 @@ export const getParentMenu = (
       parentArray.push(parentKey);
     }
   }
-  parentArray.push('projects');
   return parentArray;
 };

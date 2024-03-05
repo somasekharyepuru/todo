@@ -1,9 +1,10 @@
-import { MenuProps, Typography } from 'antd';
+import { useAppSelector } from '@/redux/hooks';
+import { MenuProps, Popconfirm, Typography } from 'antd';
 import { usePathname } from 'next/navigation';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MSMenu, MSSider } from '../base';
+import { MSButton, MSMenu, MSSider } from '../base';
 import { getFormattedItems, getParentMenu, getSelectedKey } from './service';
 import { ISideMenuItem } from './side-menu-interface';
 import {
@@ -12,14 +13,19 @@ import {
   setOpenKeys,
   setSelectedMenu,
 } from './side-menu-slice';
-import { useAppSelector } from '@/redux/hooks';
-import { MSLogo } from '@/utils';
+import {
+  ArrowDownOutlined,
+  DownCircleFilled,
+  DownCircleOutlined,
+} from '@ant-design/icons';
+import { useRouter } from 'next/router';
 
 interface sideMenuProps {
   items: ISideMenuItem[];
 }
 
 export const MSSideMenu = ({ items }: sideMenuProps) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const pathName = usePathname();
   const { isCollapsed, selected, openKeys } = useSelector(
@@ -47,16 +53,32 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
   const handleOpenChange: MenuProps['onOpenChange'] = (keys) => {
     dispatch(setOpenKeys(keys));
   };
+  const handleConfirm = () => {
+    router.push('/logout');
+  };
+
+  const handleCancel = () => {};
   return (
     <MSSider
       collapsible={true}
       collapsed={isCollapsed}
       onCollapse={(value) => handleCollapseEvent(value)}
     >
-      <div className="flex p-2">
+      <div className="flex p-2 justify-between items-center">
         <Typography className="text-semibold text-base text-white">
           {user?.name}
         </Typography>
+        <div className="cursor-pointer">
+          <Popconfirm
+            title="Logout"
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DownCircleOutlined className="text-white" />
+          </Popconfirm>
+        </div>
       </div>
       <div className="mt-4">
         <MSMenu

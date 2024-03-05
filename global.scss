@@ -2,3 +2,21 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.task-container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.task--circle {
+  &:hover {
+    .task--circle__icon {
+      opacity: 1;
+    }
+  }
+}

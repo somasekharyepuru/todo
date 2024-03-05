@@ -1,0 +1,50 @@
+query GetTasks {
+  getTasks {
+    id
+    title
+    description
+    due_date
+    priority
+    is_completed
+    is_deleted
+    project {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+query GetTaskById($getTaskByIdId: String!) {
+  getTaskById(id: $getTaskByIdId) {
+    id
+    title
+    description
+    due_date
+    priority
+    is_completed
+    is_deleted
+    project {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+mutation CreateTask($task: CreateTaskDto!) {
+  createTask(task: $task) {
+    id
+  }
+}
+mutation UpdateTask($task: UpdateTaskDto!) {
+  updateTask(task: $task) {
+    id
+  }
+}
+mutation DeleteTask($deleteTaskId: String!) {
+  deleteTask(id: $deleteTaskId) {
+    success
+    message
+  }
+}

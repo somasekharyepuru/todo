@@ -32,7 +32,7 @@ export type CreateRoleDto = {
 
 export type CreateTaskDto = {
   description?: InputMaybe<Scalars['String']>;
-  due_date?: InputMaybe<Scalars['DateTime']>;
+  due_date?: InputMaybe<Scalars['String']>;
   priority?: InputMaybe<Scalars['String']>;
   project_id?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
@@ -200,7 +200,7 @@ export type Task = {
   __typename?: 'Task';
   created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  due_date?: Maybe<Scalars['DateTime']>;
+  due_date?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   is_completed: Scalars['Boolean'];
   is_deleted: Scalars['Boolean'];
@@ -225,7 +225,7 @@ export type UpdateProjectDto = {
 
 export type UpdateTaskDto = {
   description?: InputMaybe<Scalars['String']>;
-  due_date?: InputMaybe<Scalars['DateTime']>;
+  due_date?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   is_completed?: InputMaybe<Scalars['Boolean']>;
   priority?: InputMaybe<Scalars['String']>;
@@ -273,6 +273,60 @@ export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProjectsQuery = { __typename?: 'Query', getProjects: Array<{ __typename?: 'Project', id: string, name: string }> };
 
+export type CreateProjectMutationVariables = Exact<{
+  project: CreateProjectDto;
+}>;
+
+
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string, name: string } };
+
+export type UpdateProjectMutationVariables = Exact<{
+  project: UpdateProjectDto;
+}>;
+
+
+export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'Project', id: string, name: string } };
+
+export type DeleteProjectMutationVariables = Exact<{
+  deleteProjectId: Scalars['String'];
+}>;
+
+
+export type DeleteProjectMutation = { __typename?: 'Mutation', deleteProject: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTasksQuery = { __typename?: 'Query', getTasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: string | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null }> };
+
+export type GetTaskByIdQueryVariables = Exact<{
+  getTaskByIdId: Scalars['String'];
+}>;
+
+
+export type GetTaskByIdQuery = { __typename?: 'Query', getTaskById: { __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: string | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null } };
+
+export type CreateTaskMutationVariables = Exact<{
+  task: CreateTaskDto;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string } };
+
+export type UpdateTaskMutationVariables = Exact<{
+  task: UpdateTaskDto;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask: { __typename?: 'Task', id: string } };
+
+export type DeleteTaskMutationVariables = Exact<{
+  deleteTaskId: Scalars['String'];
+}>;
+
+
+export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
 
 export const LoginDocument = `
     mutation Login($user: LoginDto!) {
@@ -306,6 +360,90 @@ export const GetProjectsDocument = `
   }
 }
     `;
+export const CreateProjectDocument = `
+    mutation CreateProject($project: CreateProjectDto!) {
+  createProject(project: $project) {
+    id
+    name
+  }
+}
+    `;
+export const UpdateProjectDocument = `
+    mutation UpdateProject($project: UpdateProjectDto!) {
+  updateProject(project: $project) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteProjectDocument = `
+    mutation DeleteProject($deleteProjectId: String!) {
+  deleteProject(id: $deleteProjectId) {
+    success
+    message
+  }
+}
+    `;
+export const GetTasksDocument = `
+    query GetTasks {
+  getTasks {
+    id
+    title
+    description
+    due_date
+    priority
+    is_completed
+    is_deleted
+    project {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+    `;
+export const GetTaskByIdDocument = `
+    query GetTaskById($getTaskByIdId: String!) {
+  getTaskById(id: $getTaskByIdId) {
+    id
+    title
+    description
+    due_date
+    priority
+    is_completed
+    is_deleted
+    project {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+    `;
+export const CreateTaskDocument = `
+    mutation CreateTask($task: CreateTaskDto!) {
+  createTask(task: $task) {
+    id
+  }
+}
+    `;
+export const UpdateTaskDocument = `
+    mutation UpdateTask($task: UpdateTaskDto!) {
+  updateTask(task: $task) {
+    id
+  }
+}
+    `;
+export const DeleteTaskDocument = `
+    mutation DeleteTask($deleteTaskId: String!) {
+  deleteTask(id: $deleteTaskId) {
+    success
+    message
+  }
+}
+    `;
 
 const injectedRtkApi = graphql_api.injectEndpoints({
   endpoints: (build) => ({
@@ -315,9 +453,33 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
       query: (variables) => ({ document: GetProjectsDocument, variables })
     }),
+    CreateProject: build.mutation<CreateProjectMutation, CreateProjectMutationVariables>({
+      query: (variables) => ({ document: CreateProjectDocument, variables })
+    }),
+    UpdateProject: build.mutation<UpdateProjectMutation, UpdateProjectMutationVariables>({
+      query: (variables) => ({ document: UpdateProjectDocument, variables })
+    }),
+    DeleteProject: build.mutation<DeleteProjectMutation, DeleteProjectMutationVariables>({
+      query: (variables) => ({ document: DeleteProjectDocument, variables })
+    }),
+    GetTasks: build.query<GetTasksQuery, GetTasksQueryVariables | void>({
+      query: (variables) => ({ document: GetTasksDocument, variables })
+    }),
+    GetTaskById: build.query<GetTaskByIdQuery, GetTaskByIdQueryVariables>({
+      query: (variables) => ({ document: GetTaskByIdDocument, variables })
+    }),
+    CreateTask: build.mutation<CreateTaskMutation, CreateTaskMutationVariables>({
+      query: (variables) => ({ document: CreateTaskDocument, variables })
+    }),
+    UpdateTask: build.mutation<UpdateTaskMutation, UpdateTaskMutationVariables>({
+      query: (variables) => ({ document: UpdateTaskDocument, variables })
+    }),
+    DeleteTask: build.mutation<DeleteTaskMutation, DeleteTaskMutationVariables>({
+      query: (variables) => ({ document: DeleteTaskDocument, variables })
+    }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useLoginMutation, useGetProjectsQuery, useLazyGetProjectsQuery } = injectedRtkApi;
+export const { useLoginMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = injectedRtkApi;
 
