@@ -5,7 +5,7 @@ import React from 'react';
 const ProjectTasks = () => {
   return (
     <MainLayout>
-      <TaskContainer />
+      <TaskContainer type="project" />
     </MainLayout>
   );
 };

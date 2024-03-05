@@ -69,6 +69,7 @@ export type Mutation = {
   deleteTask: CommonResponse;
   deleteUser: CommonResponse;
   login: JwtTokenWithUser;
+  logout: CommonResponse;
   register: CommonResponse;
   resendOtp: CommonResponse;
   updateProfile: User;
@@ -268,6 +269,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'JWTTokenWithUser', id: string, token: string, first_name: string, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, expires_at: number, role: { __typename?: 'Role', id: string, name: string, code: string, description?: string | null } } };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -349,6 +355,14 @@ export const LoginDocument = `
     created_at
     updated_at
     expires_at
+  }
+}
+    `;
+export const LogoutDocument = `
+    mutation Logout {
+  logout {
+    success
+    message
   }
 }
     `;
@@ -450,6 +464,9 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     Login: build.mutation<LoginMutation, LoginMutationVariables>({
       query: (variables) => ({ document: LoginDocument, variables })
     }),
+    Logout: build.mutation<LogoutMutation, LogoutMutationVariables | void>({
+      query: (variables) => ({ document: LogoutDocument, variables })
+    }),
     GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
       query: (variables) => ({ document: GetProjectsDocument, variables })
     }),
@@ -481,5 +498,5 @@ const injectedRtkApi = graphql_api.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useLoginMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = injectedRtkApi;
+export const { useLoginMutation, useLogoutMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = injectedRtkApi;
 

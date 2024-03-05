@@ -1,15 +1,14 @@
+import { useLogoutMutation } from '@/api';
 import { useDispatch } from 'react-redux';
 import { clearSession } from '../slice';
 // import { useSignOutMutation } from '@/api';
 
 export const useLogout = () => {
   const dispatch = useDispatch();
-  // const [signOut] = useSignOutMutation();
+  const [signOut] = useLogoutMutation();
   const logout = async () => {
-    // await signOut();
-    // dispatch(removeHotel());
+    await signOut();
     dispatch(clearSession());
-    // dispatch(storeLogout());
   };
 
   return { logout };

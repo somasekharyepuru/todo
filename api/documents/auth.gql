@@ -20,3 +20,9 @@ mutation Login($user: LoginDto!) {
     expires_at
   }
 }
+mutation Logout {
+  logout {
+    success
+    message
+  }
+}

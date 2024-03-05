@@ -14,9 +14,9 @@ export type TaskContainerPropsType =
   | 'project'
   | 'custom';
 interface ITaskContainerProps {
-  type: TaskContainerPropsType;
+  type?: TaskContainerPropsType;
 }
-export const TaskContainer = ({ type }: ITaskContainerProps) => {
+export const TaskContainer = ({ type = 'today' }: ITaskContainerProps) => {
   const {
     data: rawTasksData,
     isFetching: tasksFetching,
