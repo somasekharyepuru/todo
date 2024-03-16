@@ -1,5 +1,5 @@
-query GetTasks {
-  getTasks {
+query GetTasks($input: GetTaskInput!) {
+  getTasks(input: $input) {
     id
     title
     description
@@ -46,5 +46,11 @@ mutation DeleteTask($deleteTaskId: String!) {
   deleteTask(id: $deleteTaskId) {
     success
     message
+  }
+}
+query Priorities {
+  priorities {
+    id
+    name
   }
 }

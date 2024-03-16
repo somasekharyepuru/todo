@@ -5,6 +5,9 @@ export const TaskTitleMap: {
     title: string;
   };
 } = {
+  all: {
+    title: 'All',
+  },
   today: {
     title: 'Today',
   },

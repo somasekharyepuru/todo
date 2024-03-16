@@ -1,13 +1,12 @@
-import { GetTasksQuery } from '@/api';
-import { Typography } from 'antd';
-import React from 'react';
-import { MSButton, MSCard, MSCheckBox, MSRadio, MSRadioButton } from '..';
 import { TickIcon } from '@/utils';
-import { EditOutlined } from '@ant-design/icons';
+import { CalendarOutlined, EditOutlined } from '@ant-design/icons';
+import { Typography } from 'antd';
+import { MSButton, MSCard } from '..';
+import { IFormattedTask } from './service';
 export interface ITaskCardProps {
-  data: GetTasksQuery['getTasks'][number];
+  data: IFormattedTask;
   onTaskComplete?: (id: string) => void;
-  onTaskEdit?: (taskData: GetTasksQuery['getTasks'][number]) => void;
+  onTaskEdit?: (taskData: IFormattedTask) => void;
 }
 export const TaskCard = ({
   data,
@@ -20,6 +19,9 @@ export const TaskCard = ({
   const handleTaskEdit = () => {
     onTaskEdit?.(data);
   };
+  const priorityColor = data?.priority
+    ? `border-priority_${data.priority}`
+    : 'border-gray-600';
   return (
     <>
       <MSCard
@@ -33,7 +35,7 @@ export const TaskCard = ({
           <div className="flex gap-2">
             <div className="flex items-center">
               <div
-                className="task--circle flex items-center relative w-4 h-4 cursor-pointer border border-gray-600 border-solid rounded-full"
+                className={`task--circle flex items-center relative w-4 h-4 cursor-pointer border ${priorityColor} border-solid rounded-full`}
                 onClick={handleCompleteTaskClick}
               >
                 <TickIcon />
@@ -42,6 +44,23 @@ export const TaskCard = ({
             <div className="flex flex-col gap-1">
               <Typography className="font-semibold">{data?.title}</Typography>
               <Typography className="text-xs">{data?.description}</Typography>
+              <div className="flex w-full gap-4">
+                {data.due_date ? (
+                  <div className="flex gap-1">
+                    <CalendarOutlined />
+                    <Typography>{data.dueDateFormatted}</Typography>
+                  </div>
+                ) : (
+                  ''
+                )}
+                {data.project?.id ? (
+                  <div>
+                    <Typography>#{data.project?.name}</Typography>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
             </div>
           </div>
           <div className="flex ">

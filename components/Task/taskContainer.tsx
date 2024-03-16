@@ -1,36 +1,60 @@
 import { GetTasksQuery, useGetTasksQuery, useUpdateTaskMutation } from '@/api';
+import { PlusOutlined } from '@ant-design/icons';
+import { Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { MSButton, MSNotification, MSSpinner } from '..';
-import { TaskCard } from './task-card';
-import { Typography } from 'antd';
-import { TaskTitleMap } from './title-map';
-import { PlusOutlined } from '@ant-design/icons';
 import { AddTask } from './add-task';
 import { EditTask } from './edit-task';
+import { IFormattedTask, getFilterValues, getFormattedTasks } from './service';
+import { TaskCard } from './task-card';
+import { TaskTitleMap } from './title-map';
 export type TaskContainerPropsType =
+  | 'all'
   | 'today'
   | 'upcoming'
   | 'completed'
   | 'project'
   | 'custom';
 interface ITaskContainerProps {
+  entityId?: string;
   type?: TaskContainerPropsType;
 }
-export const TaskContainer = ({ type = 'today' }: ITaskContainerProps) => {
+export const TaskContainer = ({
+  type = 'today',
+  entityId,
+}: ITaskContainerProps) => {
+  const paginationDefaults = {
+    limit: 20,
+    skip: 0,
+  };
+  const filterInput = useMemo(() => {
+    return getFilterValues({
+      type,
+      additionalInfo: {
+        projectId: entityId ? (entityId as string) : null,
+      },
+      pagination: {
+        ...paginationDefaults,
+      },
+    });
+  }, [type, entityId]);
   const {
     data: rawTasksData,
     isFetching: tasksFetching,
     refetch: refetchTasks,
-  } = useGetTasksQuery();
+  } = useGetTasksQuery({
+    input: {
+      ...filterInput,
+    },
+  });
   const [updateTask, updateTaskStatus] = useUpdateTaskMutation();
   const [showAddTask, setShowAddTask] = useState(false);
   const [selectedEditTask, setSelectedEditTask] = useState<
     GetTasksQuery['getTasks'][number] | null
   >(null);
-  const tasks = useMemo(() => {
-    // TODO: WRITE FORMATTER HERE FOR TASK DATA
+  const tasks: IFormattedTask[] = useMemo(() => {
     if (rawTasksData) {
-      return rawTasksData.getTasks;
+      return getFormattedTasks(rawTasksData.getTasks);
     }
     return [];
   }, [rawTasksData]);
@@ -92,7 +116,7 @@ export const TaskContainer = ({ type = 'today' }: ITaskContainerProps) => {
               <div className="flex flex-col gap-4">
                 {tasks.map((task) => {
                   return (
-                    <>
+                    <React.Fragment key={task.id}>
                       {selectedEditTask && task.id === selectedEditTask.id ? (
                         <div className="mt-4">
                           <EditTask
@@ -109,7 +133,7 @@ export const TaskContainer = ({ type = 'today' }: ITaskContainerProps) => {
                           onTaskEdit={handleTaskEdit}
                         />
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </div>
@@ -121,6 +145,9 @@ export const TaskContainer = ({ type = 'today' }: ITaskContainerProps) => {
                 <AddTask
                   onAddSuccess={handleAddSuccess}
                   onCancel={handleCancel}
+                  initialValues={{
+                    project_id: entityId || null,
+                  }}
                 />
               </div>
             ) : (

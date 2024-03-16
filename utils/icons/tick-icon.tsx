@@ -1,7 +1,7 @@
 export const TickIcon = () => {
   return (
     <svg
-      className="task--circle__icon absolute inset-0 m-auto opacity-0 pointer-events-none"
+      className="task--circle__icon absolute inset-0 m-auto opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out cursor-pointer pointer-events-none"
       width="14"
       height="14"
       viewBox="0 0 20 20"

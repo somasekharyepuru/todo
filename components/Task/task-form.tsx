@@ -14,6 +14,7 @@ import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { IFormattedTaskForm, formatTaskFormDataToAPI } from './service';
+import { useGetProjectsQuery, usePrioritiesQuery } from '@/api';
 dayjs.extend(customParseFormat);
 export interface ITaskForm {
   title: string;
@@ -27,7 +28,7 @@ export interface ITaskFormProps {
   page: 'ADD' | 'EDIT';
   onSubmit: (values: IFormattedTaskForm) => void;
   onCancel?: () => void;
-  initialValues?: ITaskForm;
+  initialValues?: Partial<ITaskForm>;
   loading?: boolean;
 }
 
@@ -39,6 +40,10 @@ export const TaskForm = ({
   loading,
 }: ITaskFormProps) => {
   const [form] = Form.useForm();
+  const { data: projects, isFetching: projectsFetching } =
+    useGetProjectsQuery();
+  const { data: priorities, isFetching: prioritiesLoading } =
+    usePrioritiesQuery();
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
@@ -90,6 +95,7 @@ export const TaskForm = ({
             name={'due_date'}
             className="w-full mb-2"
             datePickerProps={{
+              placeholder: 'Due Date',
               disabledDate,
               format: 'DD-MM-YYYY',
             }}
@@ -99,7 +105,11 @@ export const TaskForm = ({
             className="w-full mb-2"
             selectProps={{
               placeholder: 'Priority',
-              options: [],
+              bindKey: 'id',
+              bindLabel: 'name',
+              allowClear: true,
+              options: priorities?.priorities || [],
+              loading: prioritiesLoading,
             }}
           />
           <MSFormSelect
@@ -107,7 +117,12 @@ export const TaskForm = ({
             className="w-full mb-2"
             selectProps={{
               placeholder: 'Project',
-              options: [],
+              options: projects?.getProjects || [],
+              bindKey: 'id',
+              bindLabel: 'name',
+              allowClear: true,
+              loading: projectsFetching,
+              disabled: !!initialValues?.project_id,
             }}
           />
           <MSButton type="text" onClick={handleCancel}>

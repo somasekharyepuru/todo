@@ -21,6 +21,7 @@ export type CommonResponse = {
 };
 
 export type CreateProjectDto = {
+  description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
@@ -36,6 +37,16 @@ export type CreateTaskDto = {
   priority?: InputMaybe<Scalars['String']>;
   project_id?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+};
+
+export type GetTaskInput = {
+  due_date?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  order_by?: InputMaybe<Order_By_Enum>;
+  priority?: InputMaybe<Scalars['String']>;
+  project_id?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Float']>;
+  task_date_type?: InputMaybe<TaskDateTypeEnum>;
 };
 
 export type JwtTokenWithUser = {
@@ -149,8 +160,20 @@ export type MutationVerifyOtpArgs = {
   input: VerifyOtpDto;
 };
 
+export enum Order_By_Enum {
+  Ascending = 'ASCENDING',
+  Descending = 'DESCENDING'
+}
+
+export type Priority = {
+  __typename?: 'Priority';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type Project = {
   __typename?: 'Project';
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
   user: User;
@@ -164,6 +187,7 @@ export type Query = {
   getTasks: Array<Task>;
   getUserById: User;
   me: User;
+  priorities: Array<Priority>;
   projects: Array<Project>;
   roles: Array<Role>;
   tasks: Array<Task>;
@@ -178,6 +202,11 @@ export type QueryGetProjectByIdArgs = {
 
 export type QueryGetTaskByIdArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetTasksArgs = {
+  input: GetTaskInput;
 };
 
 
@@ -201,7 +230,7 @@ export type Task = {
   __typename?: 'Task';
   created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  due_date?: Maybe<Scalars['String']>;
+  due_date?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   is_completed: Scalars['Boolean'];
   is_deleted: Scalars['Boolean'];
@@ -210,6 +239,12 @@ export type Task = {
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
 };
+
+export enum TaskDateTypeEnum {
+  Past = 'Past',
+  Today = 'Today',
+  Upcoming = 'Upcoming'
+}
 
 export type UpdateProfileDto = {
   first_name: Scalars['String'];
@@ -220,6 +255,7 @@ export type UpdateProfileDto = {
 };
 
 export type UpdateProjectDto = {
+  description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
 };
@@ -300,17 +336,19 @@ export type DeleteProjectMutationVariables = Exact<{
 
 export type DeleteProjectMutation = { __typename?: 'Mutation', deleteProject: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
 
-export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTasksQueryVariables = Exact<{
+  input: GetTaskInput;
+}>;
 
 
-export type GetTasksQuery = { __typename?: 'Query', getTasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: string | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null }> };
+export type GetTasksQuery = { __typename?: 'Query', getTasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: any | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null }> };
 
 export type GetTaskByIdQueryVariables = Exact<{
   getTaskByIdId: Scalars['String'];
 }>;
 
 
-export type GetTaskByIdQuery = { __typename?: 'Query', getTaskById: { __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: string | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null } };
+export type GetTaskByIdQuery = { __typename?: 'Query', getTaskById: { __typename?: 'Task', id: string, title: string, description?: string | null, due_date?: any | null, priority?: string | null, is_completed: boolean, is_deleted: boolean, created_at: any, updated_at: any, project?: { __typename?: 'Project', id: string, name: string } | null } };
 
 export type CreateTaskMutationVariables = Exact<{
   task: CreateTaskDto;
@@ -332,6 +370,11 @@ export type DeleteTaskMutationVariables = Exact<{
 
 
 export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type PrioritiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PrioritiesQuery = { __typename?: 'Query', priorities: Array<{ __typename?: 'Priority', id: string, name: string }> };
 
 
 export const LoginDocument = `
@@ -399,8 +442,8 @@ export const DeleteProjectDocument = `
 }
     `;
 export const GetTasksDocument = `
-    query GetTasks {
-  getTasks {
+    query GetTasks($input: GetTaskInput!) {
+  getTasks(input: $input) {
     id
     title
     description
@@ -458,6 +501,14 @@ export const DeleteTaskDocument = `
   }
 }
     `;
+export const PrioritiesDocument = `
+    query Priorities {
+  priorities {
+    id
+    name
+  }
+}
+    `;
 
 const injectedRtkApi = graphql_api.injectEndpoints({
   endpoints: (build) => ({
@@ -479,7 +530,7 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     DeleteProject: build.mutation<DeleteProjectMutation, DeleteProjectMutationVariables>({
       query: (variables) => ({ document: DeleteProjectDocument, variables })
     }),
-    GetTasks: build.query<GetTasksQuery, GetTasksQueryVariables | void>({
+    GetTasks: build.query<GetTasksQuery, GetTasksQueryVariables>({
       query: (variables) => ({ document: GetTasksDocument, variables })
     }),
     GetTaskById: build.query<GetTaskByIdQuery, GetTaskByIdQueryVariables>({
@@ -494,9 +545,12 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     DeleteTask: build.mutation<DeleteTaskMutation, DeleteTaskMutationVariables>({
       query: (variables) => ({ document: DeleteTaskDocument, variables })
     }),
+    Priorities: build.query<PrioritiesQuery, PrioritiesQueryVariables | void>({
+      query: (variables) => ({ document: PrioritiesDocument, variables })
+    }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useLoginMutation, useLogoutMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = injectedRtkApi;
+export const { useLoginMutation, useLogoutMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation, usePrioritiesQuery, useLazyPrioritiesQuery } = injectedRtkApi;
 

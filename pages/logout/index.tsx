@@ -10,13 +10,14 @@ export default function LogoutPage() {
   const { logout } = useLogout();
 
   useEffect(() => {
-    dispatch(clearSession());
     logout()
       .then(() => {
         router.push('/login');
+        dispatch(clearSession());
       })
       .catch((error) => {
         MSNotification('error', 'Unable to sign out');
+        dispatch(clearSession());
       });
   }, []);
   return <MSSpinner loading={true} />;

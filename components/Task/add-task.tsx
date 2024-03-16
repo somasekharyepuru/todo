@@ -7,10 +7,12 @@ import { IFormattedTaskForm } from './service';
 export interface IAddTaskForm {
   onAddSuccess?: () => void;
   onCancel?: () => void;
+  initialValues?: Partial<ITaskForm>;
 }
 export const AddTask = ({
   onAddSuccess,
   onCancel,
+  initialValues,
 }: PropsWithChildren<IAddTaskForm>) => {
   const [addTask, addTaskStatus] = useCreateTaskMutation();
   const handleSubmit = (values: IFormattedTaskForm) => {
@@ -41,6 +43,7 @@ export const AddTask = ({
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         loading={addTaskStatus.isLoading}
+        initialValues={initialValues}
       />
     </MSCard>
   );

@@ -1,10 +1,18 @@
 import { useAppSelector } from '@/redux/hooks';
-import { MenuProps, Popconfirm, Typography } from 'antd';
+import {
+  Collapse,
+  CollapseProps,
+  MenuProps,
+  Popconfirm,
+  Tooltip,
+  Typography,
+  theme,
+} from 'antd';
 import { usePathname } from 'next/navigation';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MSButton, MSMenu, MSSider } from '../base';
+import { MSButton, MSMenu, MSModal, MSSider } from '../base';
 import { getFormattedItems, getParentMenu, getSelectedKey } from './service';
 import { ISideMenuItem } from './side-menu-interface';
 import {
@@ -17,8 +25,12 @@ import {
   ArrowDownOutlined,
   DownCircleFilled,
   DownCircleOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { ProjectList } from '@/components/projects/project-list';
+import { CreateProject } from '@/components/projects/create-project';
+import Projects from '@/components/projects/projects';
 
 interface sideMenuProps {
   items: ISideMenuItem[];
@@ -28,7 +40,7 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const pathName = usePathname();
-  const { isCollapsed, selected, openKeys } = useSelector(
+  const { selected, openKeys } = useSelector(
     (state: any) => state.sideMenu as ISideMenuSliceState
   );
   const { user } = useAppSelector((state) => state.session);
@@ -42,9 +54,6 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
   const enhancedMenuItems = useMemo(() => {
     return getFormattedItems(items as ISideMenuItem[]);
   }, [items]);
-  const handleCollapseEvent = (value: boolean) => {
-    dispatch(setIsCollapsed(value));
-  };
 
   const handleMenuClick = (e: MenuInfo) => {
     dispatch(setSelectedMenu(e.key));
@@ -58,14 +67,15 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
   };
 
   const handleCancel = () => {};
+
   return (
     <MSSider
-      collapsible={true}
-      collapsed={isCollapsed}
-      onCollapse={(value) => handleCollapseEvent(value)}
+      style={{
+        background: 'white',
+      }}
     >
       <div className="flex p-2 justify-between items-center">
-        <Typography className="text-semibold text-base text-white">
+        <Typography className="text-semibold text-base ">
           {user?.name}
         </Typography>
         <div className="cursor-pointer">
@@ -76,13 +86,12 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
             okText="Yes"
             cancelText="No"
           >
-            <DownCircleOutlined className="text-white" />
+            <DownCircleOutlined className="" />
           </Popconfirm>
         </div>
       </div>
       <div className="mt-4">
         <MSMenu
-          theme="dark"
           selectedKeys={selected ? [selected] : []}
           onOpenChange={handleOpenChange}
           mode="inline"
@@ -90,6 +99,9 @@ export const MSSideMenu = ({ items }: sideMenuProps) => {
           onClick={handleMenuClick}
           openKeys={openKeys}
         />
+      </div>
+      <div className="mt-8 p-2">
+        <Projects />
       </div>
     </MSSider>
   );

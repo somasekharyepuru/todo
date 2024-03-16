@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen:graphql": "npx graphql-codegen --config codegen-graphql.ts"
+    "codegen": "npx graphql-codegen --config codegen-graphql.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
