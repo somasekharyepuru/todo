@@ -21,7 +21,7 @@ export type CommonResponse = {
 };
 
 export type CreateProjectDto = {
-  description?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -79,15 +79,17 @@ export type Mutation = {
   deleteProject: CommonResponse;
   deleteTask: CommonResponse;
   deleteUser: CommonResponse;
+  finishSignUp: JwtTokenWithUser;
+  forgotPassword: CommonResponse;
   login: JwtTokenWithUser;
   logout: CommonResponse;
-  register: CommonResponse;
+  register: RegisterUser;
   resendOtp: CommonResponse;
-  updateProfile: User;
+  resetPassword: CommonResponse;
   updateProject: Project;
   updateTask: Task;
   updateUser: User;
-  verifyOtp: CommonResponse;
+  verifyOtp: RegisterWithToken;
 };
 
 
@@ -121,6 +123,16 @@ export type MutationDeleteUserArgs = {
 };
 
 
+export type MutationFinishSignUpArgs = {
+  user: UpdateProfileDto;
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
   user: LoginDto;
 };
@@ -136,8 +148,8 @@ export type MutationResendOtpArgs = {
 };
 
 
-export type MutationUpdateProfileArgs = {
-  user: UpdateProfileDto;
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordDto;
 };
 
 
@@ -173,7 +185,7 @@ export type Priority = {
 
 export type Project = {
   __typename?: 'Project';
-  description?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
   user: User;
@@ -214,8 +226,30 @@ export type QueryGetUserByIdArgs = {
   id: Scalars['String'];
 };
 
+export type RegisterUser = {
+  __typename?: 'RegisterUser';
+  is_profile_updated?: Maybe<Scalars['Boolean']>;
+  is_verified?: Maybe<Scalars['Boolean']>;
+  message?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  token?: Maybe<Scalars['String']>;
+};
+
 export type RegisterUserDto = {
   email: Scalars['String'];
+};
+
+export type RegisterWithToken = {
+  __typename?: 'RegisterWithToken';
+  expires_at?: Maybe<Scalars['Float']>;
+  message?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  token: Scalars['String'];
+};
+
+export type ResetPasswordDto = {
+  password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type Role = {
@@ -248,14 +282,15 @@ export enum TaskDateTypeEnum {
 
 export type UpdateProfileDto = {
   first_name: Scalars['String'];
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   phone?: InputMaybe<Scalars['Float']>;
+  token: Scalars['String'];
 };
 
 export type UpdateProjectDto = {
-  description?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
   id: Scalars['String'];
   name: Scalars['String'];
 };
@@ -309,6 +344,48 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type RegisterMutationVariables = Exact<{
+  user: RegisterUserDto;
+}>;
+
+
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'RegisterUser', message?: string | null, success: boolean, is_verified?: boolean | null, is_profile_updated?: boolean | null, token?: string | null } };
+
+export type ResendOtpMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type ResendOtpMutation = { __typename?: 'Mutation', resendOtp: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type VerifyOtpMutationVariables = Exact<{
+  input: VerifyOtpDto;
+}>;
+
+
+export type VerifyOtpMutation = { __typename?: 'Mutation', verifyOtp: { __typename?: 'RegisterWithToken', success: boolean, message?: string | null, token: string, expires_at?: number | null } };
+
+export type FinishSignUpMutationVariables = Exact<{
+  user: UpdateProfileDto;
+}>;
+
+
+export type FinishSignUpMutation = { __typename?: 'Mutation', finishSignUp: { __typename?: 'JWTTokenWithUser', id: string, first_name: string, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, token: string, role: { __typename?: 'Role', name: string, id: string, description?: string | null, code: string } } };
+
+export type ForgotPasswordMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type ResetPasswordMutationVariables = Exact<{
+  input: ResetPasswordDto;
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
 
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -404,6 +481,74 @@ export const LoginDocument = `
 export const LogoutDocument = `
     mutation Logout {
   logout {
+    success
+    message
+  }
+}
+    `;
+export const RegisterDocument = `
+    mutation Register($user: RegisterUserDto!) {
+  register(user: $user) {
+    message
+    success
+    is_verified
+    is_profile_updated
+    token
+  }
+}
+    `;
+export const ResendOtpDocument = `
+    mutation ResendOtp($email: String!) {
+  resendOtp(email: $email) {
+    success
+    message
+  }
+}
+    `;
+export const VerifyOtpDocument = `
+    mutation VerifyOtp($input: VerifyOtpDTO!) {
+  verifyOtp(input: $input) {
+    success
+    message
+    token
+    expires_at
+  }
+}
+    `;
+export const FinishSignUpDocument = `
+    mutation FinishSignUp($user: UpdateProfileDto!) {
+  finishSignUp(user: $user) {
+    id
+    first_name
+    last_name
+    email
+    phone
+    is_active
+    is_verified
+    is_profile_updated
+    role {
+      name
+      id
+      description
+      code
+    }
+    created_at
+    updated_at
+    token
+  }
+}
+    `;
+export const ForgotPasswordDocument = `
+    mutation ForgotPassword($email: String!) {
+  forgotPassword(email: $email) {
+    success
+    message
+  }
+}
+    `;
+export const ResetPasswordDocument = `
+    mutation ResetPassword($input: ResetPasswordDto!) {
+  resetPassword(input: $input) {
     success
     message
   }
@@ -518,6 +663,24 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     Logout: build.mutation<LogoutMutation, LogoutMutationVariables | void>({
       query: (variables) => ({ document: LogoutDocument, variables })
     }),
+    Register: build.mutation<RegisterMutation, RegisterMutationVariables>({
+      query: (variables) => ({ document: RegisterDocument, variables })
+    }),
+    ResendOtp: build.mutation<ResendOtpMutation, ResendOtpMutationVariables>({
+      query: (variables) => ({ document: ResendOtpDocument, variables })
+    }),
+    VerifyOtp: build.mutation<VerifyOtpMutation, VerifyOtpMutationVariables>({
+      query: (variables) => ({ document: VerifyOtpDocument, variables })
+    }),
+    FinishSignUp: build.mutation<FinishSignUpMutation, FinishSignUpMutationVariables>({
+      query: (variables) => ({ document: FinishSignUpDocument, variables })
+    }),
+    ForgotPassword: build.mutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>({
+      query: (variables) => ({ document: ForgotPasswordDocument, variables })
+    }),
+    ResetPassword: build.mutation<ResetPasswordMutation, ResetPasswordMutationVariables>({
+      query: (variables) => ({ document: ResetPasswordDocument, variables })
+    }),
     GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
       query: (variables) => ({ document: GetProjectsDocument, variables })
     }),
@@ -552,5 +715,5 @@ const injectedRtkApi = graphql_api.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useLoginMutation, useLogoutMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation, usePrioritiesQuery, useLazyPrioritiesQuery } = injectedRtkApi;
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useResendOtpMutation, useVerifyOtpMutation, useFinishSignUpMutation, useForgotPasswordMutation, useResetPasswordMutation, useGetProjectsQuery, useLazyGetProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation, useGetTasksQuery, useLazyGetTasksQuery, useGetTaskByIdQuery, useLazyGetTaskByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation, usePrioritiesQuery, useLazyPrioritiesQuery } = injectedRtkApi;
 

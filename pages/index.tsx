@@ -1,10 +1,12 @@
 import { MSCard, MSComingSoon, MSSpinner } from '@/components';
 import { useAuthentication, withAuth } from '@/components/auth';
 import { MainLayout } from '@/components/layout';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const Home = () => {
   const isAuthenticated = useAuthentication();
-
+  const router = useRouter();
   if (!isAuthenticated) {
     return (
       <MSSpinner
@@ -13,6 +15,10 @@ const Home = () => {
       />
     );
   }
+
+  useEffect(() => {
+    router.push('/all');
+  }, []);
   return (
     <>
       <MainLayout>

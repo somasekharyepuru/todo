@@ -1,36 +1,20 @@
+import Projects from '@/components/projects/projects';
 import { useAppSelector } from '@/redux/hooks';
-import {
-  Collapse,
-  CollapseProps,
-  MenuProps,
-  Popconfirm,
-  Tooltip,
-  Typography,
-  theme,
-} from 'antd';
+import { DownCircleOutlined } from '@ant-design/icons';
+import { MenuProps, Popconfirm, Typography } from 'antd';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MSButton, MSMenu, MSModal, MSSider } from '../base';
+import { MSMenu, MSSider } from '../base';
 import { getFormattedItems, getParentMenu, getSelectedKey } from './service';
 import { ISideMenuItem } from './side-menu-interface';
 import {
   ISideMenuSliceState,
-  setIsCollapsed,
   setOpenKeys,
   setSelectedMenu,
 } from './side-menu-slice';
-import {
-  ArrowDownOutlined,
-  DownCircleFilled,
-  DownCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import { useRouter } from 'next/router';
-import { ProjectList } from '@/components/projects/project-list';
-import { CreateProject } from '@/components/projects/create-project';
-import Projects from '@/components/projects/projects';
 
 interface sideMenuProps {
   items: ISideMenuItem[];

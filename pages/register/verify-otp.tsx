@@ -47,7 +47,7 @@ const VerifyOtp = () => {
             MSNotification('success', 'OTP Verified successfully');
           }
           router.push(
-            `/reset-password/create-password?token=${encodeURIComponent(
+            `/register/finish-sign-up?token=${encodeURIComponent(
               data?.verifyOtp?.token
             )}`
           );

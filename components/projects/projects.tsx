@@ -1,5 +1,5 @@
 import { Collapse, CollapseProps, Tooltip } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProjectList } from './project-list';
 import { PlusOutlined } from '@ant-design/icons';
 import { CreateProject } from './create-project';
@@ -8,6 +8,7 @@ import { useGetProjectsQuery } from '@/api';
 const Projects = () => {
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
   const { data: rawProjects, ...projectsStatus } = useGetProjectsQuery();
+  const [activeKey, setActiveKey] = useState<string[]>([]);
   const handleCreateProject = (event) => {
     event.stopPropagation();
     setOpenCreateProjectModal(true);
@@ -41,6 +42,18 @@ const Projects = () => {
     setOpenCreateProjectModal(false);
   };
 
+  useEffect(() => {
+    if (rawProjects?.getProjects?.length) {
+      setActiveKey(['1']);
+    } else {
+      setActiveKey([]);
+    }
+  }, [rawProjects]);
+
+  const handleOnChange = (key) => {
+    setActiveKey(key);
+  };
+
   return (
     <>
       <Collapse
@@ -48,7 +61,9 @@ const Projects = () => {
         accordion
         items={projects}
         expandIconPosition="end"
-        defaultActiveKey={['1']}
+        // defaultActiveKey={['1']}
+        activeKey={activeKey}
+        onChange={handleOnChange}
       ></Collapse>
       {openCreateProjectModal ? (
         <CreateProject

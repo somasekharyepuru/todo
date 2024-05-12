@@ -31,8 +31,9 @@ export const LoginForm = ({ onSubmit }: LoginDataType) => {
           placeholder: 'Password',
           prefix: <LockOutlined className="site-form-item-icon" />,
         }}
+        className="mb-2"
       ></MSFormPassword>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <div></div>
         <MSLink
           href={'/reset-password/forgot-password'}
@@ -48,6 +49,12 @@ export const LoginForm = ({ onSubmit }: LoginDataType) => {
           className="login-form-button w-full bg-blue hover"
           label="Log in"
         />
+      </div>
+      <div className="mt-2">
+        <span>Not a user ? </span>
+        <span className="text-blue">
+          <MSLink href={'/register'}>Register</MSLink>
+        </span>
       </div>
     </MSForm>
   );

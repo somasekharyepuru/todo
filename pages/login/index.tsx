@@ -21,7 +21,7 @@ const Login = () => {
 
   useEffect(() => {
     if (data) {
-      router.push('/all');
+      router.push('/');
     }
   }, [data]);
   return (
