@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { MSButton, MSForm, MSFormInput, MSFormTextArea } from '..';
 export interface IProjectForm {
   name: string;
-  description?: string | null;
+  description: string;
 }
 export interface IProjectFormProps {
   page: 'ADD' | 'EDIT';

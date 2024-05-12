@@ -6,6 +6,9 @@ import { useEffect } from 'react';
 
 const Home = () => {
   const isAuthenticated = useAuthentication();
+  useEffect(() => {
+    router.push('/all');
+  }, []);
   const router = useRouter();
   if (!isAuthenticated) {
     return (
@@ -16,9 +19,6 @@ const Home = () => {
     );
   }
 
-  useEffect(() => {
-    router.push('/all');
-  }, []);
   return (
     <>
       <MainLayout>
