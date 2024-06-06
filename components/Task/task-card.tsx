@@ -34,6 +34,7 @@ export const TaskCard = ({
         <div className="group flex justify-between">
           <div className="flex gap-2">
             <div className="flex items-center">
+              {/* <div className="border-priority_low border-priority_medium border-priority_high"></div> */}
               <div
                 className={`task--circle flex items-center relative w-4 h-4 cursor-pointer border ${priorityColor} border-solid rounded-full`}
                 onClick={handleCompleteTaskClick}
