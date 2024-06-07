@@ -60,5 +60,6 @@ const CreatePassword = () => {
     </div>
   );
 };
+CreatePassword.getLayout = (page: any) => page;
 
 export default CreatePassword;

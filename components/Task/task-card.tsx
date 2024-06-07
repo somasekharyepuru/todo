@@ -30,6 +30,7 @@ export const TaskCard = ({
             padding: 8,
           },
         }}
+        className="shadow-xl"
       >
         <div className="group flex justify-between">
           <div className="flex gap-2">

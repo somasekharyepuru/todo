@@ -53,5 +53,6 @@ const ForgotPassword = () => {
     </div>
   );
 };
+ForgotPassword.getLayout = (page: any) => page;
 
 export default ForgotPassword;

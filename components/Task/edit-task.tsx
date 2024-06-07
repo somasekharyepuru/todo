@@ -43,6 +43,7 @@ export const EditTask = ({
           padding: 8,
         },
       }}
+      className="shadow-xl"
     >
       <TaskForm
         page="EDIT"

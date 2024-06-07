@@ -4,9 +4,9 @@ import React from 'react';
 
 const TodayTasks = () => {
   return (
-    <MainLayout>
+    <>
       <TaskContainer type="today" />
-    </MainLayout>
+    </>
   );
 };
 

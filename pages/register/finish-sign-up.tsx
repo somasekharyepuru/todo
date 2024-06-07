@@ -79,5 +79,6 @@ const FinishSignUp = () => {
     </div>
   );
 };
+FinishSignUp.getLayout = (page: any) => page;
 
 export default FinishSignUp;

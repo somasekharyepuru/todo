@@ -3,11 +3,7 @@ import { MainLayout } from '@/components/layout';
 import React from 'react';
 
 const AllTasks = () => {
-  return (
-    <MainLayout>
-      <TaskContainer type="all" />
-    </MainLayout>
-  );
+  return <TaskContainer type="all" />;
 };
 
 export default AllTasks;

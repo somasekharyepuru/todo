@@ -7,9 +7,7 @@ const ProjectTasks = () => {
   const router = useRouter();
   const { id } = router.query;
   return (
-    <MainLayout>
-      {id ? <TaskContainer type="project" entityId={id as string} /> : ''}
-    </MainLayout>
+    <>{id ? <TaskContainer type="project" entityId={id as string} /> : ''}</>
   );
 };
 

@@ -43,5 +43,5 @@ const Login = () => {
     </div>
   );
 };
-
+Login.getLayout = (page: any) => page;
 export default Login;

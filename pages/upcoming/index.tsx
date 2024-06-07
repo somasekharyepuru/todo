@@ -4,9 +4,9 @@ import React from 'react';
 
 const UpcomingTasks = () => {
   return (
-    <MainLayout>
+    <>
       <TaskContainer type="upcoming" />
-    </MainLayout>
+    </>
   );
 };
 

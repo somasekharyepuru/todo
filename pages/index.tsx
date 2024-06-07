@@ -21,11 +21,9 @@ const Home = () => {
 
   return (
     <>
-      <MainLayout>
-        <MSCard className="h-full">
-          <MSComingSoon />
-        </MSCard>
-      </MainLayout>
+      <MSCard className="h-full">
+        <MSComingSoon />
+      </MSCard>
     </>
   );
 };

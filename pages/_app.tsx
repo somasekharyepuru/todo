@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import '../global.scss';
 import 'tailwindcss/tailwind.css';
 import type { AppProps } from 'next/app';
@@ -8,13 +8,24 @@ import { persistor, store } from '../redux/store';
 import { ConfigProvider } from 'antd';
 import colors from '../colors';
 import { PersistGate } from 'redux-persist/integration/react';
+import { MainLayout } from '@/components/layout';
+import { NextPage } from 'next';
 
 interface componentType {
   transition: string;
   visibility: 'visible' | 'hidden';
   opacity: number;
 }
-const App = ({ Component, pageProps }: AppProps) => {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+// Extend AppProps to include NextPageWithLayout
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function App({ Component, pageProps }: AppPropsWithLayout) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -25,6 +36,8 @@ const App = ({ Component, pageProps }: AppProps) => {
     visibility: mounted ? 'visible' : 'hidden',
     opacity: mounted ? 1 : 0,
   };
+  const getLayout =
+    Component.getLayout ?? ((page) => <MainLayout>{page}</MainLayout>);
 
   return (
     <ConfigProvider
@@ -43,11 +56,11 @@ const App = ({ Component, pageProps }: AppProps) => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <div style={componentStyle}>
-            <Component {...pageProps} />
+            {getLayout(<Component {...pageProps} />)}
           </div>
         </PersistGate>
       </Provider>
     </ConfigProvider>
   );
-};
+}
 export default dynamic(() => Promise.resolve(App), { ssr: false });

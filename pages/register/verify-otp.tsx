@@ -84,5 +84,5 @@ const VerifyOtp = () => {
     </div>
   );
 };
-
+VerifyOtp.getLayout = (page: any) => page;
 export default VerifyOtp;

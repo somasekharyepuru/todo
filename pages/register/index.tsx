@@ -49,5 +49,6 @@ const Register = () => {
     </div>
   );
 };
+Register.getLayout = (page: any) => page;
 
 export default Register;
