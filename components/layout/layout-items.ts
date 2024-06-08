@@ -16,4 +16,9 @@ export const LayoutItems: ISideMenuItem[] = [
     label: 'Up coming',
     url: '/upcoming',
   },
+  {
+    key: 'completed',
+    label: 'Completed',
+    url: '/completed',
+  },
 ];

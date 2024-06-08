@@ -25,12 +25,6 @@ export type CreateProjectDto = {
   name: Scalars['String'];
 };
 
-export type CreateRoleDto = {
-  code: Scalars['String'];
-  description?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-};
-
 export type CreateTaskDto = {
   description?: InputMaybe<Scalars['String']>;
   due_date?: InputMaybe<Scalars['String']>;
@@ -54,14 +48,14 @@ export type JwtTokenWithUser = {
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   expires_at: Scalars['Float'];
-  first_name: Scalars['String'];
+  first_name?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   is_active: Scalars['Boolean'];
   is_profile_updated: Scalars['Boolean'];
   is_verified: Scalars['Boolean'];
   last_name?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['Float']>;
-  role: Role;
+  role: Array<Role>;
   token: Scalars['String'];
   updated_at: Scalars['DateTime'];
 };
@@ -74,7 +68,6 @@ export type LoginDto = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProject: Project;
-  createRole: Role;
   createTask: Task;
   deleteProject: CommonResponse;
   deleteTask: CommonResponse;
@@ -95,11 +88,6 @@ export type Mutation = {
 
 export type MutationCreateProjectArgs = {
   project: CreateProjectDto;
-};
-
-
-export type MutationCreateRoleArgs = {
-  input: CreateRoleDto;
 };
 
 
@@ -198,10 +186,10 @@ export type Query = {
   getTaskById: Task;
   getTasks: Array<Task>;
   getUserById: User;
+  hb: Scalars['String'];
   me: User;
   priorities: Array<Priority>;
   projects: Array<Project>;
-  roles: Array<Role>;
   tasks: Array<Task>;
   users: Array<User>;
 };
@@ -256,7 +244,7 @@ export type Role = {
   __typename?: 'Role';
   code: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -265,16 +253,18 @@ export type Task = {
   created_at: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   due_date?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   is_completed: Scalars['Boolean'];
   is_deleted: Scalars['Boolean'];
   priority?: Maybe<Scalars['String']>;
   project?: Maybe<Project>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export enum TaskDateTypeEnum {
+  Completed = 'Completed',
   Past = 'Past',
   Today = 'Today',
   Upcoming = 'Upcoming'
@@ -317,14 +307,14 @@ export type User = {
   __typename?: 'User';
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
-  first_name: Scalars['String'];
+  first_name?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   is_active: Scalars['Boolean'];
   is_profile_updated: Scalars['Boolean'];
   is_verified: Scalars['Boolean'];
   last_name?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['Float']>;
-  role: Role;
+  role: Array<Role>;
   updated_at: Scalars['DateTime'];
 };
 
@@ -338,7 +328,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'JWTTokenWithUser', id: string, token: string, first_name: string, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, expires_at: number, role: { __typename?: 'Role', id: string, name: string, code: string, description?: string | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'JWTTokenWithUser', id: string, token: string, first_name?: string | null, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, expires_at: number, role: Array<{ __typename?: 'Role', id: string, name: string, code: string, description?: string | null }> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -371,7 +361,7 @@ export type FinishSignUpMutationVariables = Exact<{
 }>;
 
 
-export type FinishSignUpMutation = { __typename?: 'Mutation', finishSignUp: { __typename?: 'JWTTokenWithUser', id: string, first_name: string, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, token: string, role: { __typename?: 'Role', name: string, id: string, description?: string | null, code: string } } };
+export type FinishSignUpMutation = { __typename?: 'Mutation', finishSignUp: { __typename?: 'JWTTokenWithUser', id: string, first_name?: string | null, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, created_at: any, updated_at: any, token: string, role: Array<{ __typename?: 'Role', name: string, id: string, description?: string | null, code: string }> } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];

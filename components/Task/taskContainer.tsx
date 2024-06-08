@@ -1,4 +1,9 @@
-import { GetTasksQuery, useGetTasksQuery, useUpdateTaskMutation } from '@/api';
+import {
+  GetTasksQuery,
+  Order_By_Enum,
+  useGetTasksQuery,
+  useUpdateTaskMutation,
+} from '@/api';
 import { PlusOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
@@ -8,6 +13,7 @@ import { EditTask } from './edit-task';
 import { IFormattedTask, getFilterValues, getFormattedTasks } from './service';
 import { TaskCard } from './task-card';
 import { TaskTitleMap } from './title-map';
+import dayjs from 'dayjs';
 export type TaskContainerPropsType =
   | 'all'
   | 'today'
@@ -106,6 +112,14 @@ export const TaskContainer = ({
     refetchTasks?.();
     setSelectedEditTask(null);
   };
+  const dueDate = useMemo(() => {
+    if (type === 'today') {
+      return dayjs();
+    } else if (type === 'upcoming') {
+      return dayjs().add(1, 'day');
+    }
+    return null;
+  }, [type]);
   return (
     <>
       <div className="task-container xs:min-w-48 sm:min-w-96 md:min-w-[600px] lg:min-w-[720px] max-w=[1440px] p-8">
@@ -131,6 +145,7 @@ export const TaskContainer = ({
                           data={task}
                           onTaskComplete={handleTaskComplete}
                           onTaskEdit={handleTaskEdit}
+                          type={type}
                         />
                       )}
                     </React.Fragment>
@@ -147,19 +162,26 @@ export const TaskContainer = ({
                   onCancel={handleCancel}
                   initialValues={{
                     project_id: entityId || null,
+                    due_date: dueDate,
                   }}
                 />
               </div>
             ) : (
-              <div className="mt-4">
-                <MSButton
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={handleAddTaskClick}
-                >
-                  Add
-                </MSButton>
-              </div>
+              <>
+                {type !== 'completed' ? (
+                  <div className="mt-4">
+                    <MSButton
+                      icon={<PlusOutlined />}
+                      type="primary"
+                      onClick={handleAddTaskClick}
+                    >
+                      Add
+                    </MSButton>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </>
             )}
           </MSSpinner>
         </div>

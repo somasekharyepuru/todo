@@ -60,6 +60,9 @@ export const getFilterValues = ({
   if (type === 'project') {
     filter.project_id = additionalInfo?.projectId;
   }
+  if (type === 'completed') {
+    filter.task_date_type = TaskDateTypeEnum.Completed;
+  }
   return filter;
 };
 export const getFormattedTasks = (
