@@ -6,12 +6,12 @@ const config: CodegenConfig = {
   schema: process.env.NEXT_PUBLIC_BASE_URL,
   documents: './api/documents/**/*.gql',
   generates: {
-    './api/hooks/graphql/hooks.ts': {
+    './api/hooks/graphql/generated.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-rtk-query'],
       config: {
         importBaseApiFrom: '../../graphql-api-base',
         importBaseApiAlternateName: 'graphql_api',
-        exportHooks: true,
+        exportHooks: false,
       },
     },
   },

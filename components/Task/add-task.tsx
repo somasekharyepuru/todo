@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { ITaskForm, TaskForm } from './task-form';
-import { useCreateTaskMutation } from '@/api';
+import { useApi } from '@/api';
 import { MSCard, MSNotification } from '..';
 import { IFormattedTaskForm } from './service';
 
@@ -14,7 +14,7 @@ export const AddTask = ({
   onCancel,
   initialValues,
 }: PropsWithChildren<IAddTaskForm>) => {
-  const [addTask, addTaskStatus] = useCreateTaskMutation();
+  const [addTask, addTaskStatus] = useApi.useCreateTaskMutation();
   const handleSubmit = (values: IFormattedTaskForm) => {
     addTask({
       task: {

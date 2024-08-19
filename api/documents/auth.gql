@@ -1,7 +1,8 @@
 mutation Login($user: LoginDto!) {
   login(user: $user) {
     id
-    token
+    accessToken
+    refreshToken
     first_name
     last_name
     email
@@ -33,7 +34,8 @@ mutation Register($user: RegisterUserDto!) {
     success
     is_verified
     is_profile_updated
-    token
+    accessToken
+    refreshToken
   }
 }
 mutation ResendOtp($email: String!) {
@@ -70,7 +72,8 @@ mutation FinishSignUp($user: UpdateProfileDto!) {
     }
     created_at
     updated_at
-    token
+    accessToken
+    refreshToken
   }
 }
 mutation ForgotPassword($email: String!) {

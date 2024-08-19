@@ -14,7 +14,7 @@ import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { IFormattedTaskForm, formatTaskFormDataToAPI } from './service';
-import { useGetProjectsQuery, usePrioritiesQuery } from '@/api';
+import { useApi } from '@/api';
 dayjs.extend(customParseFormat);
 export interface ITaskForm {
   title: string;
@@ -41,9 +41,9 @@ export const TaskForm = ({
 }: ITaskFormProps) => {
   const [form] = Form.useForm();
   const { data: projects, isFetching: projectsFetching } =
-    useGetProjectsQuery();
+    useApi.useGetProjectsQuery();
   const { data: priorities, isFetching: prioritiesLoading } =
-    usePrioritiesQuery();
+    useApi.usePrioritiesQuery();
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);

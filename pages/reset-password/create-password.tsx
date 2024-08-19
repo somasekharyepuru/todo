@@ -2,7 +2,7 @@ import { CreatePasswordForm } from '@/components/auth';
 import { MSCard, MSNotification } from '@/components';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { useResetPasswordMutation } from '@/api';
+import { useApi } from '@/api';
 import { MSLogo } from '@/utils';
 
 const CreatePassword = () => {
@@ -14,7 +14,8 @@ const CreatePassword = () => {
     }
     return '';
   }, [accessTokenEncoded]);
-  const [createPassword, createPasswordStatus] = useResetPasswordMutation();
+  const [createPassword, createPasswordStatus] =
+    useApi.useResetPasswordMutation();
   const handleSubmit = (values: any) => {
     if (values.password) {
       createPassword({

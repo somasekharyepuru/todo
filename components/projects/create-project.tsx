@@ -1,4 +1,4 @@
-import { useCreateProjectMutation } from '@/api';
+import { useApi } from '@/api';
 import { IProjectForm, ProjectForm } from './project-form';
 import { MSModal, MSNotification } from '../lib/base';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ interface ICreateProjectProps {
 }
 export const CreateProject = ({ onClose, onSuccess }: ICreateProjectProps) => {
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(true);
-  const [addProject, addProjectStatus] = useCreateProjectMutation();
+  const [addProject, addProjectStatus] = useApi.useCreateProjectMutation();
   const handleSubmit = (values: IProjectForm) => {
     addProject({
       project: {

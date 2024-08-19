@@ -1,6 +1,6 @@
-import { useFinishSignUpMutation } from '@/api';
-import { MSNotification, MSCard } from '@/components';
-import { CreatePasswordForm, setSession } from '@/components/auth';
+import { useApi } from '@/api';
+import { MSCard, MSNotification } from '@/components';
+import { setSession } from '@/components/auth';
 import { FinishSignUpForm } from '@/components/auth/components/register/finish-signup-form';
 import { IRegisterUserSignUp } from '@/components/auth/components/register/model';
 import { useAppDispatch } from '@/redux/hooks';
@@ -18,7 +18,7 @@ const FinishSignUp = () => {
     }
     return '';
   }, [accessTokenEncoded]);
-  const [finishSignUp, finishSignUpStatus] = useFinishSignUpMutation();
+  const [finishSignUp, finishSignUpStatus] = useApi.useFinishSignUpMutation();
   const handleSubmit = (values: IRegisterUserSignUp) => {
     if (values.password) {
       finishSignUp({
@@ -34,9 +34,11 @@ const FinishSignUp = () => {
         .then((data) => {
           dispatch(
             setSession({
-              token: data?.finishSignUp?.token,
+              token: data?.finishSignUp?.accessToken,
               expiry: 0,
               remember: false,
+              refreshToken: data.finishSignUp.refreshToken,
+              logout: false,
               user: {
                 id: data?.finishSignUp?.id,
                 name: [

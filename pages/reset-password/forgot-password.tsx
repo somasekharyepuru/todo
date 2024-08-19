@@ -2,11 +2,12 @@ import { ForgotPasswordForm } from '@/components/auth';
 import { MSCard, MSNotification } from '@/components';
 import { useRouter } from 'next/router';
 import { MSLogo } from '@/utils/icons';
-import { useForgotPasswordMutation } from '@/api';
+import { useApi } from '@/api';
 
 const ForgotPassword = () => {
   const router = useRouter();
-  const [forgotPassword, forgotPasswordStatus] = useForgotPasswordMutation();
+  const [forgotPassword, forgotPasswordStatus] =
+    useApi.useForgotPasswordMutation();
   const handleSubmit = (values: any) => {
     if (values.email) {
       forgotPassword({

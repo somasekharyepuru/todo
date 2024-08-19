@@ -1,4 +1,3 @@
-import { useGetProjectsQuery } from '@/api';
 import { MSContent, MSSideMenu } from '@/components';
 import { Layout } from 'antd';
 import React, { useMemo } from 'react';

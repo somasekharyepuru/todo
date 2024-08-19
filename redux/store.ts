@@ -1,11 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-
 import { storeAccessTokenToLocalStorage } from './middleware';
-import { graphql_api } from '../api/graphql-api-base';
 import { slideMenuReducer } from '@/components';
-import { persistStore, persistReducer } from 'redux-persist';
+import { sessionReducer } from '@/components/auth';
+import { persistStore, persistReducer, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { refetchToken, sessionReducer } from '@/components/auth';
+import { graphql_api } from '../api/graphql-api-base';
 const persistConfig = {
   key: 'root',
   storage,
@@ -23,8 +22,12 @@ export const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NEXT_PUBLIC_ENVIRONMENT !== 'production',
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false })
-      .prepend(storeAccessTokenToLocalStorage.middleware, refetchToken)
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    })
+      .prepend(storeAccessTokenToLocalStorage.middleware)
       .concat(graphql_api.middleware),
 });
 

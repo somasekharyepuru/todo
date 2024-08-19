@@ -1,4 +1,4 @@
-import { GetTasksQuery, useUpdateTaskMutation } from '@/api';
+import { GetTasksQuery, useApi } from '@/api';
 import { PropsWithChildren, useMemo } from 'react';
 import { MSCard, MSNotification } from '..';
 import { IFormattedTaskForm, getInitialValuesForTaskForm } from './service';
@@ -14,7 +14,7 @@ export const EditTask = ({
   onEditSuccess,
   onCancel,
 }: PropsWithChildren<IEditTaskForm>) => {
-  const [ediTask, ediTaskStatus] = useUpdateTaskMutation();
+  const [ediTask, ediTaskStatus] = useApi.useUpdateTaskMutation();
   const handleSubmit = (values: IFormattedTaskForm) => {
     ediTask({
       task: {

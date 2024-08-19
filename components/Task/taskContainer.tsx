@@ -1,9 +1,4 @@
-import {
-  GetTasksQuery,
-  Order_By_Enum,
-  useGetTasksQuery,
-  useUpdateTaskMutation,
-} from '@/api';
+import { GetTasksQuery, useApi } from '@/api';
 import { PlusOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
@@ -48,12 +43,12 @@ export const TaskContainer = ({
     data: rawTasksData,
     isFetching: tasksFetching,
     refetch: refetchTasks,
-  } = useGetTasksQuery({
+  } = useApi.useGetTasksQuery({
     input: {
       ...filterInput,
     },
   });
-  const [updateTask, updateTaskStatus] = useUpdateTaskMutation();
+  const [updateTask, updateTaskStatus] = useApi.useUpdateTaskMutation();
   const [showAddTask, setShowAddTask] = useState(false);
   const [selectedEditTask, setSelectedEditTask] = useState<
     GetTasksQuery['getTasks'][number] | null

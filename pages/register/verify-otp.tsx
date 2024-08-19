@@ -1,4 +1,4 @@
-import { useResendOtpMutation, useVerifyOtpMutation } from '@/api';
+import { useApi } from '@/api';
 import { MSNotification, MSCard } from '@/components';
 import { OtpTimer, VerifyOtpForm } from '@/components/auth';
 import { MSLogo } from '@/utils';
@@ -14,7 +14,7 @@ const VerifyOtp = () => {
     }
     return '';
   }, [emailEncoded]);
-  const [resendOtp, resendOtpStatus] = useResendOtpMutation();
+  const [resendOtp, resendOtpStatus] = useApi.useResendOtpMutation();
 
   const resendOTP = () => {
     if (email) {
@@ -32,7 +32,7 @@ const VerifyOtp = () => {
         });
     }
   };
-  const [verifyOtp, verifyOtpStatus] = useVerifyOtpMutation();
+  const [verifyOtp, verifyOtpStatus] = useApi.useVerifyOtpMutation();
   const handleSubmit = async (values: any) => {
     if (values.otp) {
       verifyOtp({

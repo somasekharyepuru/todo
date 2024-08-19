@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { ProjectList } from './project-list';
 import { PlusOutlined } from '@ant-design/icons';
 import { CreateProject } from './create-project';
-import { useGetProjectsQuery } from '@/api';
+import { useApi } from '@/api';
 
 const Projects = () => {
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
-  const { data: rawProjects, ...projectsStatus } = useGetProjectsQuery();
+  const { data: rawProjects, ...projectsStatus } = useApi.useGetProjectsQuery();
   const [activeKey, setActiveKey] = useState<string[]>([]);
   const handleCreateProject = (event) => {
     event.stopPropagation();

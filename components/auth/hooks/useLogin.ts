@@ -4,17 +4,15 @@ import { useDispatch } from 'react-redux';
 import { setSession } from '../slice';
 import { ILoginInput } from '../models/login-input';
 import {
-  CommonResponse,
   RegisterUser,
-  useLoginMutation,
-  useRegisterMutation,
+  useApi
 } from '@/api';
 import { decodeJwt } from '@/utils';
 
 export const useLogin = () => {
   const dispatch = useDispatch();
-  const [loginMutation, loginMutationStatus] = useLoginMutation();
-  const [registerUserMutation, registerMutationStatus] = useRegisterMutation();
+  const [loginMutation, loginMutationStatus] = useApi.useLoginMutation();
+  const [registerUserMutation, registerMutationStatus] = useApi.useRegisterMutation();
   // const [triggerPasswordResetOtp] = useForgotPasswordMutation();
   const defaultTokenExpirationTimestamp = dayjs().add(30, 'minutes').valueOf(); // 30 minutes by default
   const handleLogin = ({ identifier, password, remember }: ILoginInput) => {
@@ -26,17 +24,19 @@ export const useLogin = () => {
     })
       .unwrap()
       .then((value) => {
-        const { id, token, first_name, last_name, email } = value.login;
-        const decoded = decodeJwt(token);
+        const { id, accessToken, refreshToken, first_name, last_name, email } = value.login;
+        const decoded = decodeJwt(accessToken);
         let expiryTime = decoded?.exp
           ? decoded?.exp
           : defaultTokenExpirationTimestamp;
         expiryTime *= 1000; // convert to milliseconds
         dispatch(
           setSession({
-            token: token,
+            token: accessToken,
+            refreshToken,
             expiry: expiryTime,
             remember: !!remember,
+            logout: false,
             user: {
               id,
               name: [first_name, last_name].join(' '),

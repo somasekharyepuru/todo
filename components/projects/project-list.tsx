@@ -1,4 +1,4 @@
-import { GetProjectsQuery, useGetProjectsQuery } from '@/api';
+import { GetProjectsQuery } from '@/api';
 import { MSLink } from '@/components';
 import { useRouter } from 'next/router';
 interface IProjectsListProps {

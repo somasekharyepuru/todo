@@ -17,9 +17,11 @@ const Register = () => {
         if (!data.is_verified) {
           router.push(`/register/verify-otp?email=${values.email}`);
         } else {
-          if (data.token) {
+          if (data.accessToken) {
             router.push(
-              `/register/finish-sign-up?token=${encodeURIComponent(data.token)}`
+              `/register/finish-sign-up?token=${encodeURIComponent(
+                data.accessToken
+              )}`
             );
           } else {
             MSNotification('error', 'Something went wrong please try again');
