@@ -30,9 +30,7 @@ const Login = () => {
         <MSSpinner loading={isLoading}>
           <div className="form-content-wrapper  mx-auto">
             <div className="logo mx-auto w-full flex justify-center">
-              <div className="w-[140px]">
-                <MSLogo />
-              </div>
+              <MSLogo />
             </div>
             <div className="login-form-wrapper pt-8">
               <LoginForm onSubmit={onSubmit} />
