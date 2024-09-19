@@ -7,7 +7,7 @@ const TodayTasks = () => {
   return (
     <>
       <Head>
-        <title>Today's Tasks</title>
+        <title>Today\'s Tasks</title>
       </Head>
       <TaskContainer type="today" />
     </>
