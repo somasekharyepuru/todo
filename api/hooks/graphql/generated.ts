@@ -46,6 +46,7 @@ export type GetTaskInput = {
 export type JwtTokenWithUser = {
   __typename?: 'JWTTokenWithUser';
   accessToken: Scalars['String'];
+  avatarUrl?: Maybe<Scalars['String']>;
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   expires_at: Scalars['Float'];
@@ -239,6 +240,7 @@ export type RegisterUser = {
 
 export type RegisterUserDto = {
   email: Scalars['String'];
+  isVolunteer?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type RegisterWithToken = {
@@ -319,6 +321,7 @@ export type UpdateUserDto = {
 
 export type User = {
   __typename?: 'User';
+  avatarUrl?: Maybe<Scalars['String']>;
   created_at: Scalars['DateTime'];
   email: Scalars['String'];
   first_name?: Maybe<Scalars['String']>;
@@ -390,6 +393,11 @@ export type ResetPasswordMutationVariables = Exact<{
 
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'CommonResponse', success: boolean, message?: string | null } };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, email: string, phone?: number | null, is_active: boolean, is_verified: boolean, is_profile_updated: boolean, avatarUrl?: string | null, created_at: any, updated_at: any, role: Array<{ __typename?: 'Role', id: string, name: string, code: string, description?: string | null }> } };
 
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -561,6 +569,29 @@ export const ResetPasswordDocument = `
   }
 }
     `;
+export const MeDocument = `
+    query Me {
+  me {
+    id
+    first_name
+    last_name
+    email
+    phone
+    is_active
+    is_verified
+    is_profile_updated
+    role {
+      id
+      name
+      code
+      description
+    }
+    avatarUrl
+    created_at
+    updated_at
+  }
+}
+    `;
 export const GetProjectsDocument = `
     query GetProjects {
   getProjects {
@@ -687,6 +718,9 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     }),
     ResetPassword: build.mutation<ResetPasswordMutation, ResetPasswordMutationVariables>({
       query: (variables) => ({ document: ResetPasswordDocument, variables })
+    }),
+    Me: build.query<MeQuery, MeQueryVariables | void>({
+      query: (variables) => ({ document: MeDocument, variables })
     }),
     GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
       query: (variables) => ({ document: GetProjectsDocument, variables })

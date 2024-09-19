@@ -10,6 +10,7 @@ import colors from '../colors';
 import { PersistGate } from 'redux-persist/integration/react';
 import { MainLayout } from '@/components/layout';
 import { NextPage } from 'next';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 interface componentType {
   transition: string;
@@ -55,9 +56,13 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     >
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <div style={componentStyle}>
-            {getLayout(<Component {...pageProps} />)}
-          </div>
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
+          >
+            <div style={componentStyle}>
+              {getLayout(<Component {...pageProps} />)}
+            </div>
+          </GoogleOAuthProvider>
         </PersistGate>
       </Provider>
     </ConfigProvider>

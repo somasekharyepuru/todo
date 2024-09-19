@@ -89,3 +89,24 @@ mutation ResetPassword($input: ResetPasswordDto!) {
     message
   }
 }
+query Me {
+  me {
+    id
+    first_name
+    last_name
+    email
+    phone
+    is_active
+    is_verified
+    is_profile_updated
+    role {
+      id
+      name
+      code
+      description
+    }
+    avatarUrl
+    created_at
+    updated_at
+  }
+}

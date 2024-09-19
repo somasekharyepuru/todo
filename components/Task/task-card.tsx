@@ -33,9 +33,9 @@ export const TaskCard = ({
             padding: 8,
           },
         }}
-        className="shadow-xl"
+        className="transition-all duration-300 hover:shadow-lg"
       >
-        <div className="group flex justify-between">
+        <div className="group flex justify-between items-center">
           <div className="flex gap-2">
             {type != 'completed' ? (
               <div className="flex items-center">
@@ -57,7 +57,11 @@ export const TaskCard = ({
                 {data.due_date ? (
                   <div className="flex gap-1">
                     <CalendarOutlined />
-                    <Typography>{data.dueDateFormatted}</Typography>
+                    <Typography
+                      className={` ${data?.isOverdue ? 'text-danger' : ''}`}
+                    >
+                      {data.dueDateFormatted}
+                    </Typography>
                   </div>
                 ) : (
                   ''
@@ -76,7 +80,7 @@ export const TaskCard = ({
             <div className="flex ">
               <MSButton
                 type="text"
-                className="hidden group-hover:block"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 onClick={handleTaskEdit}
               >
                 <EditOutlined />

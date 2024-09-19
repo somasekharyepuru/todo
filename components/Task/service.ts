@@ -8,6 +8,7 @@ export interface IFormattedTaskForm extends Omit<ITaskForm, 'due_date'> {
 }
 export type IFormattedTask = GetTasksQuery['getTasks'][number] & {
   dueDateFormatted?: string;
+  isOverdue?: boolean;
 };
 export const getVariablesForTask = (type: TaskContainerPropsType) => {
   return null;
@@ -73,6 +74,7 @@ export const getFormattedTasks = (
     updatedTasks.push({
       ...task,
       dueDateFormatted: dayjs(task.due_date).format('DD-MM-YYYY'),
+      isOverdue: dayjs(task.due_date).isBefore(dayjs(), 'day'),
     });
   });
   return updatedTasks;
