@@ -402,7 +402,14 @@ export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: str
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectsQuery = { __typename?: 'Query', getProjects: Array<{ __typename?: 'Project', id: string, name: string }> };
+export type GetProjectsQuery = { __typename?: 'Query', getProjects: Array<{ __typename?: 'Project', id: string, name: string, description: string }> };
+
+export type GetProjectByIdQueryVariables = Exact<{
+  getProjectByIdId: Scalars['String'];
+}>;
+
+
+export type GetProjectByIdQuery = { __typename?: 'Query', getProjectById: { __typename?: 'Project', id: string, name: string, description: string } };
 
 export type CreateProjectMutationVariables = Exact<{
   project: CreateProjectDto;
@@ -597,6 +604,16 @@ export const GetProjectsDocument = `
   getProjects {
     id
     name
+    description
+  }
+}
+    `;
+export const GetProjectByIdDocument = `
+    query GetProjectById($getProjectByIdId: String!) {
+  getProjectById(id: $getProjectByIdId) {
+    id
+    name
+    description
   }
 }
     `;
@@ -724,6 +741,9 @@ const injectedRtkApi = graphql_api.injectEndpoints({
     }),
     GetProjects: build.query<GetProjectsQuery, GetProjectsQueryVariables | void>({
       query: (variables) => ({ document: GetProjectsDocument, variables })
+    }),
+    GetProjectById: build.query<GetProjectByIdQuery, GetProjectByIdQueryVariables>({
+      query: (variables) => ({ document: GetProjectByIdDocument, variables })
     }),
     CreateProject: build.mutation<CreateProjectMutation, CreateProjectMutationVariables>({
       query: (variables) => ({ document: CreateProjectDocument, variables })

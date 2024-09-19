@@ -2,6 +2,14 @@ query GetProjects {
   getProjects {
     id
     name
+    description
+  }
+}
+query GetProjectById($getProjectByIdId: String!) {
+  getProjectById(id: $getProjectByIdId) {
+    id
+    name
+    description
   }
 }
 mutation CreateProject($project: CreateProjectDto!) {

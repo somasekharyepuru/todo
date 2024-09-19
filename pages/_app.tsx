@@ -11,6 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { MainLayout } from '@/components/layout';
 import { NextPage } from 'next';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Head from 'next/head';
 
 interface componentType {
   transition: string;
@@ -41,31 +42,36 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     Component.getLayout ?? ((page) => <MainLayout>{page}</MainLayout>);
 
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: colors.primary,
-          colorError: colors.danger,
-        },
-        components: {
-          List: {
-            footerBg: colors.footerBackground,
+    <>
+      <Head>
+        <title>MS Todo</title>
+      </Head>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: colors.primary,
+            colorError: colors.danger,
           },
-        },
-      }}
-    >
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
-          >
-            <div style={componentStyle}>
-              {getLayout(<Component {...pageProps} />)}
-            </div>
-          </GoogleOAuthProvider>
-        </PersistGate>
-      </Provider>
-    </ConfigProvider>
+          components: {
+            List: {
+              footerBg: colors.footerBackground,
+            },
+          },
+        }}
+      >
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <GoogleOAuthProvider
+              clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
+            >
+              <div style={componentStyle}>
+                {getLayout(<Component {...pageProps} />)}
+              </div>
+            </GoogleOAuthProvider>
+          </PersistGate>
+        </Provider>
+      </ConfigProvider>
+    </>
   );
 }
 export default dynamic(() => Promise.resolve(App), { ssr: false });
